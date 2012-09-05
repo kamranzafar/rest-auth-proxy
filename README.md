@@ -12,7 +12,7 @@ Building from source
 Follow the steps below in order to build rest-auth-proxy from source. This requires git and maven:
 
 1. Checkout the source from git
-> git clone git@github.com:kamranzafar/rest-auth-proxy.git
+> git clone git&#64;github.com:kamranzafar/rest-auth-proxy.git
 
 2. Compile and package using maven
 > mvn clean compile package
@@ -73,7 +73,7 @@ The GET requests can be tested from a web browser. On linux you can also test au
 
 ### Server response
 The server response is in json format, and returns the following on successful authentication
-> {"status":"SUCCESS","lookup":{"mail":"kamran@ldap.local","sn":"Zafar","givenName":"Kamran"}}
+> {"status":"SUCCESS","lookup":{"mail":"kamran&#64;ldap.local","sn":"Zafar","givenName":"Kamran"}}
 
 The auth server also supports base64 encoded username and password, which can easily be turned on/off by configuring the *ldap.base64* property
 in the *conf/auth.conf* configuration file. If base64 encoding is enabled, the username and password must be encoded before passing to the server.
