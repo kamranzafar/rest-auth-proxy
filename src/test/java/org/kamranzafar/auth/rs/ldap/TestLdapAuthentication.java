@@ -9,10 +9,11 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class TestLdapAuthentication {
 	@Test
-	public void testAuth() throws NamingException {
+	public void testOpenLdap() throws NamingException {
 		LdapAuthentication auth = new LdapAuthentication("localhost");
 		auth.setSearchBase("ou=People,dc=ldap,dc=local");
+		auth.setLookupAttributes(new String[] { "cn", "homeDirectory", "loginShell" });
 
-		auth.authenticate("testuser", "testpass");
+		System.out.println(auth.authenticate("testuser", "testpass"));
 	}
 }

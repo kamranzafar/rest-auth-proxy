@@ -54,8 +54,10 @@ public class LdapAuthentication {
 
 	public Map<String, String> authenticate(String user, String pass) throws NamingException {
 		if (searchFilter == null) {
-			searchFilter = "(&(objectClass=user)(mail=*))";
+			searchFilter = "(objectclass=*)";
 		}
+
+		String dn = "uid=" + user + "," + searchBase;
 
 		SearchControls searchCtls = new SearchControls();
 		searchCtls.setReturningAttributes(lookupAttributes);
@@ -65,17 +67,18 @@ public class LdapAuthentication {
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		env.put(Context.PROVIDER_URL, "ldap://" + ldapHost + ":" + ldapPort);
 		env.put(Context.SECURITY_AUTHENTICATION, "simple");
-		env.put(Context.SECURITY_PRINCIPAL, "uid=" + user);
+		env.put(Context.SECURITY_PRINCIPAL, dn);
 		env.put(Context.SECURITY_CREDENTIALS, pass);
 
 		DirContext ctxGC = new InitialLdapContext(env, null);
-		NamingEnumeration<SearchResult> answer = ctxGC.search(searchBase, searchFilter, searchCtls);
+		NamingEnumeration<SearchResult> answer = ctxGC.search(dn, searchFilter, searchCtls);
 		if (answer.hasMoreElements()) {
 			Attributes attrs = answer.next().getAttributes();
 			Map<String, String> amap = null;
 			if (attrs != null) {
 				amap = new HashMap<String, String>();
 				NamingEnumeration<? extends Attribute> ne = attrs.getAll();
+
 				while (ne.hasMore()) {
 					Attribute attr = ne.next();
 					amap.put(attr.getID(), attr.get().toString());

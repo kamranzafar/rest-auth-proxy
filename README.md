@@ -36,12 +36,12 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
 > \# Server port<br />
  server.port=9998<br /><br />
  \# Ldap config<br />
- ldap.host=10.2.3.4<br />
+ ldap.host=localhost<br />
  ldap.port=389<br /><br />
  \# ldap search base<br />
- ldap.sbase=DC=MYDOMAIN,DC=ldap,DC=local<br /><br />
+ ldap.sbase=ou=People,dc=ldap,dc=local<br /><br />
  \# ldap comma-separated lookup attributes<br />
- ldap.lookup=sn,givenName,mail<br /><br />
+ ldap.lookup=cn,homeDirectory,loginShell<br /><br />
  \# base64 encoding<br />
  ldap.base64=true
 
@@ -73,7 +73,7 @@ The GET requests can be tested from a web browser. On linux you can also test au
 
 ### Server response
 The server response is in json format, and returns the following on successful authentication
-> {"status":"SUCCESS","lookup":{"mail":"kamran&#64;ldap.local","sn":"Zafar","givenName":"Kamran"}}
+> {"status":"SUCCESS","lookup":{"cn":"testuser","homeDirectory":"/home/testuser","loginShell":"/bin/bash"}}
 
 The auth server also supports base64 encoded username and password, which can easily be turned on/off by configuring the *ldap.base64* property
 in the *conf/auth.conf* configuration file. If base64 encoding is enabled, the username and password must be encoded before passing to the server.
