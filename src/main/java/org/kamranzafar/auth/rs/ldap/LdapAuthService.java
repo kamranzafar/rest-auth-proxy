@@ -32,6 +32,7 @@ import org.kamranzafar.auth.rs.AuthException;
 import org.kamranzafar.auth.rs.AuthResponse;
 import org.kamranzafar.auth.rs.AuthService;
 import org.kamranzafar.auth.rs.Configuration;
+import org.kamranzafar.auth.rs.StringUtils;
 
 import com.sun.jersey.core.util.Base64;
 
@@ -41,7 +42,10 @@ import com.sun.jersey.core.util.Base64;
  */
 @Path("/auth")
 public class LdapAuthService implements AuthService {
-	private final Properties config = Configuration.getConfig();
+	private static final Properties config = Configuration.getConfig();
+	private static final int DEFAULT_LDAP_PORT = 389;
+	private static final String DEFAULT_AD_SFILTER = "(&(objectClass=user)(sAMAccountName={username}))";
+	private static final String DEFAULT_LDAP_SFILTER = "(objectclass=*)";
 
 	@GET
 	@Path("/ldap/{username}/{password}")
@@ -59,15 +63,6 @@ public class LdapAuthService implements AuthService {
 
 	@Override
 	public AuthResponse authenticate(String username, String password) {
-		LdapAuthentication ldap = new LdapAuthentication(config.getProperty("ldap.host"), Integer.parseInt(config
-				.getProperty("ldap.port")));
-		ldap.setSearchBase(config.getProperty("ldap.sbase"));
-
-		String la = config.getProperty("ldap.lookup");
-
-		if (la != null && !la.trim().equals("")) {
-			ldap.setLookupAttributes(la.split(","));
-		}
 
 		try {
 			if ("true".equalsIgnoreCase(config.getProperty("ldap.base64"))) {
@@ -75,8 +70,26 @@ public class LdapAuthService implements AuthService {
 				password = new String(Base64.decode(password));
 			}
 
+			boolean ad = !StringUtils.isEmpty(config.getProperty("ldap.ad"))
+					&& "true".equalsIgnoreCase(config.getProperty("ldap.ad"));
+			String sbase = config.getProperty("ldap.sbase");
+			String domain = config.getProperty("ldap.domain");
+			String principle = null;
+
+			if (ad) {
+				if (StringUtils.isEmpty(domain)) {
+					principle = username;
+				} else {
+					principle = domain + "\\" + username;
+				}
+			} else {
+				principle = "uid=" + username + "," + sbase;
+			}
+
+			LdapAuthentication ldap = getLdap(username);
+
 			// authenticate
-			Map<String, String> lookupMap = ldap.authenticate(username, password);
+			Map<String, String> lookupMap = ldap.authenticate(principle, password);
 
 			AuthResponse response = new AuthResponse();
 
@@ -90,5 +103,42 @@ public class LdapAuthService implements AuthService {
 		} catch (Exception e) {
 			throw new AuthException(e.getMessage());
 		}
+	}
+
+	private LdapAuthentication getLdap(String username) {
+		String host = config.getProperty("ldap.host");
+		int port = StringUtils.isEmpty(config.getProperty("ldap.port")) ? DEFAULT_LDAP_PORT : Integer.parseInt(config
+				.getProperty("ldap.port"));
+		boolean ad = !StringUtils.isEmpty(config.getProperty("ldap.ad"))
+				&& "true".equalsIgnoreCase(config.getProperty("ldap.ad"));
+		String sbase = config.getProperty("ldap.sbase");
+		String lookup = config.getProperty("ldap.lookup");
+		String sfilter = config.getProperty("ldap.sfilter");
+
+		LdapAuthentication ldap = new LdapAuthentication(host, port);
+
+		if (!StringUtils.isEmpty(sbase)) {
+			if (!ad) {
+				sbase = "uid=" + username + "," + sbase;
+			}
+
+			ldap.setSearchBase(sbase);
+		}
+
+		if (!StringUtils.isEmpty(lookup)) {
+			ldap.setLookupAttributes(lookup.split(","));
+		}
+
+		if (!StringUtils.isEmpty(sfilter)) {
+			ldap.setSearchFilter(sfilter.replaceAll("\\{username\\}", username));
+		} else {
+			if (ad) {
+				ldap.setSearchFilter(DEFAULT_AD_SFILTER.replaceAll("\\{username\\}", username));
+			} else {
+				ldap.setSearchFilter(DEFAULT_LDAP_SFILTER);
+			}
+		}
+
+		return ldap;
 	}
 }

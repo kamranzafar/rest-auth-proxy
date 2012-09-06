@@ -57,7 +57,7 @@ public class LdapAuthentication {
 			searchFilter = "(objectclass=*)";
 		}
 
-		String dn = "uid=" + user + "," + searchBase;
+		// String dn = "uid=" + user + "," + searchBase;
 
 		SearchControls searchCtls = new SearchControls();
 		searchCtls.setReturningAttributes(lookupAttributes);
@@ -67,11 +67,11 @@ public class LdapAuthentication {
 		env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
 		env.put(Context.PROVIDER_URL, "ldap://" + ldapHost + ":" + ldapPort);
 		env.put(Context.SECURITY_AUTHENTICATION, "simple");
-		env.put(Context.SECURITY_PRINCIPAL, dn);
+		env.put(Context.SECURITY_PRINCIPAL, user);
 		env.put(Context.SECURITY_CREDENTIALS, pass);
 
 		DirContext ctxGC = new InitialLdapContext(env, null);
-		NamingEnumeration<SearchResult> answer = ctxGC.search(dn, searchFilter, searchCtls);
+		NamingEnumeration<SearchResult> answer = ctxGC.search(searchBase, searchFilter, searchCtls);
 		if (answer.hasMoreElements()) {
 			Attributes attrs = answer.next().getAttributes();
 			Map<String, String> amap = null;

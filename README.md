@@ -37,13 +37,20 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
  server.port=9998<br /><br />
  \# Ldap config<br />
  ldap.host=localhost<br />
- ldap.port=389<br /><br />
+ ldap.port=389 \# optional<br /><br />
  \# ldap search base<br />
  ldap.sbase=ou=People,dc=ldap,dc=local<br /><br />
+ \# ldap search filter (optional)<br />
+ ldap.sfilter=(objectclass=*)<br /><br />
  \# ldap comma-separated lookup attributes<br />
  ldap.lookup=cn,homeDirectory,loginShell<br /><br />
  \# base64 encoding<br />
- ldap.base64=true
+ ldap.base64=true<br /><br />
+ \# Active directory specific configuration<br />
+ \# Active directory (optional, but must be set to true for AD)<br />
+ ldap.ad=false<br />
+ \# AD domain (optional)<br />
+ ldap.domain=MYDOMAIN
 
 Running the server
 ------------------
@@ -70,6 +77,8 @@ The GET requests can be tested from a web browser. On linux you can also test au
 
 > curl http://\[server-ip\]:9998/auth/ldap/testuser/testpass<br />
 > curl -d "username=testuser&password=testpass" http://\[server-ip\]:9998/auth/ldap
+
+*The auth server has been tested against Active Directory and Open LDAP server*
 
 ### Server response
 The server response is in json format, and returns the following on successful authentication
