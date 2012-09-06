@@ -73,7 +73,7 @@ public class LdapAuthService implements AuthService {
 			boolean ad = !StringUtils.isEmpty(config.getProperty("ldap.ad"))
 					&& "true".equalsIgnoreCase(config.getProperty("ldap.ad"));
 			String sbase = config.getProperty("ldap.sbase");
-			String domain = config.getProperty("ldap.domain");
+			String domain = config.getProperty("ldap.ad.domain");
 			String principle = null;
 
 			if (ad) {

@@ -50,7 +50,7 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
  \# Active directory (optional, but must be set to true for AD)<br />
  ldap.ad=false<br />
  \# AD domain (optional)<br />
- ldap.domain=MYDOMAIN
+ ldap.ad.domain=MYDOMAIN
 
 Running the server
 ------------------
