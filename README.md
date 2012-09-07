@@ -57,7 +57,8 @@ Running the server
 
 The auth server can run on both windows and linux. Simply execute the *run.bat* file on windows or *run.sh* file on linux
 in order to run the auth proxy server. You can also install the batch file as a windows service using any Java service wrapper
-tools.
+tools. The server by default logs INFO messages to console and captures a detailed log in *ras.log* file. The default logging 
+preferences can be changed by updating the *conf/logging.properties* file.
 
 Authentication
 --------------

@@ -30,5 +30,9 @@
       <source>${basedir}/src/main/conf/auth.conf</source>
       <outputDirectory>/conf</outputDirectory>
     </file>
+    <file>
+      <source>${basedir}/src/main/conf/logging.properties</source>
+      <outputDirectory>/conf</outputDirectory>
+    </file>
   </files>
 </assembly>

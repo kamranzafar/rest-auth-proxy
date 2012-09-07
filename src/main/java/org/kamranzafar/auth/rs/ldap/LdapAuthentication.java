@@ -19,6 +19,7 @@ package org.kamranzafar.auth.rs.ldap;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -40,6 +41,8 @@ public class LdapAuthentication {
 	private String searchBase;
 	private String searchFilter;
 	private String[] lookupAttributes;
+
+	private static Logger logger = Logger.getLogger(LdapAuthentication.class.getName());
 
 	public LdapAuthentication(String host) {
 		this.ldapHost = host;
@@ -71,6 +74,9 @@ public class LdapAuthentication {
 		env.put(Context.SECURITY_CREDENTIALS, pass);
 
 		DirContext ctxGC = new InitialLdapContext(env, null);
+
+		logger.fine("User authenticated.");
+
 		NamingEnumeration<SearchResult> answer = ctxGC.search(searchBase, searchFilter, searchCtls);
 		if (answer.hasMoreElements()) {
 			Attributes attrs = answer.next().getAttributes();
@@ -85,6 +91,7 @@ public class LdapAuthentication {
 				}
 				ne.close();
 			}
+			logger.fine("User properties found: " + amap);
 			return amap;
 		} else {
 			throw new RuntimeException("Invalid User");

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -36,20 +37,16 @@ import com.sun.jersey.api.json.JSONConfiguration;
  */
 public class AuthServer {
 	private static final URI BASE_URI = getBaseURI();
+	private static Logger logger = Logger.getLogger(AuthServer.class.getName());
 
 	private static int getPort(int defaultPort) {
 		String port = System.getProperty("auth.server.port");
 
 		if (port == null) {
-			port = Configuration.getConfig().getProperty("server.port");
+			port = Configuration.getConfig().getProperty("server.port", "" + defaultPort);
 		}
 
-		try {
-			Integer.parseInt(port);
-		} catch (NumberFormatException e) {
-
-		}
-		return defaultPort;
+		return StringUtils.toInt(port, defaultPort);
 	}
 
 	private static URI getBaseURI() {
@@ -70,7 +67,7 @@ public class AuthServer {
 	}
 
 	protected static HttpServer startServer() throws IOException {
-		System.out.println("Starting rest-auth-proxy server...");
+		logger.info("Starting rest-auth-proxy server...");
 		ResourceConfig rc = new PackagesResourceConfig("org.kamranzafar.auth.rs", "org.kamranzafar.auth.rs.ldap");
 		rc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 
@@ -79,7 +76,7 @@ public class AuthServer {
 
 	public static void main(String[] args) throws IOException {
 		HttpServer httpServer = startServer();
-		System.out.println("rest-auth-proxy server has started");
+		logger.info("rest-auth-proxy server has started");
 		System.in.read();
 		httpServer.stop();
 	}

@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * @author Kamran Zafar
@@ -27,9 +28,11 @@ import java.util.Properties;
  */
 public class Configuration {
 	private final static Properties config = new Properties();
+	private static Logger logger = Logger.getLogger(Configuration.class.getName());
 
 	static {
 		try {
+			logger.info("Loading auth server configuration...");
 			config.load(new FileInputStream(new File(new File(System.getProperty("user.dir")), "conf/auth.conf")));
 		} catch (IOException e) {
 			throw new RuntimeException(e);

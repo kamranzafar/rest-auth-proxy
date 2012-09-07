@@ -16,6 +16,8 @@
  */
 package org.kamranzafar.auth.rs;
 
+import java.util.logging.Logger;
+
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -26,9 +28,11 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class AuthExceptionMapper implements ExceptionMapper<AuthException> {
+	private static Logger logger = Logger.getLogger(AuthExceptionMapper.class.getName());
 
 	@Override
 	public Response toResponse(AuthException e) {
+		logger.fine("Un-Authorized " + e.getMessage());
 		return Response.status(Response.Status.UNAUTHORIZED)
 				.entity("{\"status\":\"ERROR\", \"" + e.getMessage() + "\"}").build();
 	}

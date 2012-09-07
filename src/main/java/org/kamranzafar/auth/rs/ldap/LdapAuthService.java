@@ -18,6 +18,7 @@ package org.kamranzafar.auth.rs.ldap;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.naming.NamingException;
 import javax.ws.rs.FormParam;
@@ -47,10 +48,16 @@ public class LdapAuthService implements AuthService {
 	private static final String DEFAULT_AD_SFILTER = "(&(objectClass=user)(sAMAccountName={username}))";
 	private static final String DEFAULT_LDAP_SFILTER = "(objectclass=*)";
 
+	private static Logger logger = Logger.getLogger(LdapAuthService.class.getName());
+
+	// @Context
+	// private HttpServletRequest request;
+
 	@GET
 	@Path("/ldap/{username}/{password}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public AuthResponse authenticateGet(@PathParam("username") String username, @PathParam("password") String password) {
+		logger.fine("New request recieved");
 		return authenticate(username, password);
 	}
 
@@ -58,12 +65,12 @@ public class LdapAuthService implements AuthService {
 	@Path("/ldap")
 	@Produces(MediaType.APPLICATION_JSON)
 	public AuthResponse authenticatePost(@FormParam("username") String username, @FormParam("password") String password) {
+		logger.fine("Request recieved");
 		return authenticate(username, password);
 	}
 
 	@Override
 	public AuthResponse authenticate(String username, String password) {
-
 		try {
 			if ("true".equalsIgnoreCase(config.getProperty("ldap.base64"))) {
 				username = new String(Base64.decode(username));
@@ -88,6 +95,7 @@ public class LdapAuthService implements AuthService {
 
 			LdapAuthentication ldap = getLdap(username);
 
+			logger.fine("Authenticating request");
 			// authenticate
 			Map<String, String> lookupMap = ldap.authenticate(principle, password);
 
@@ -107,8 +115,7 @@ public class LdapAuthService implements AuthService {
 
 	private LdapAuthentication getLdap(String username) {
 		String host = config.getProperty("ldap.host");
-		int port = StringUtils.isEmpty(config.getProperty("ldap.port")) ? DEFAULT_LDAP_PORT : Integer.parseInt(config
-				.getProperty("ldap.port"));
+		int port = StringUtils.toInt(config.getProperty("ldap.port"), DEFAULT_LDAP_PORT);
 		boolean ad = !StringUtils.isEmpty(config.getProperty("ldap.ad"))
 				&& "true".equalsIgnoreCase(config.getProperty("ldap.ad"));
 		String sbase = config.getProperty("ldap.sbase");
