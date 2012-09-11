@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.naming.NamingException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -81,7 +80,7 @@ public class LdapAuthService implements AuthService {
 					&& "true".equalsIgnoreCase(config.getProperty("ldap.ad"));
 			String sbase = config.getProperty("ldap.sbase");
 			String domain = config.getProperty("ldap.ad.domain");
-			String principle = null;
+			String principle = null; // dn
 
 			if (ad) {
 				if (StringUtils.isEmpty(domain)) {
@@ -106,8 +105,6 @@ public class LdapAuthService implements AuthService {
 			}
 
 			return response;
-		} catch (NamingException e) {
-			throw new AuthException(e.getMessage());
 		} catch (Exception e) {
 			throw new AuthException(e.getMessage());
 		}

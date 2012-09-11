@@ -34,6 +34,6 @@ public class AuthExceptionMapper implements ExceptionMapper<AuthException> {
 	public Response toResponse(AuthException e) {
 		logger.fine("Un-Authorized " + e.getMessage());
 		return Response.status(Response.Status.UNAUTHORIZED)
-				.entity("{\"status\":\"ERROR\", \"" + e.getMessage() + "\"}").build();
+				.entity("{\"status\":\"ERROR\", \"errorMessage\":\"" + e.getMessage() + "\"}").build();
 	}
 }

@@ -55,7 +55,7 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
 Running the server
 ------------------
 
-The auth server can run on both windows and linux. Simply execute the *run.bat* file on windows or *run.sh* file on linux
+The auth-proxy server can run on both windows and linux. Simply execute the *run.bat* file on windows or *run.sh* file on linux
 in order to run the auth proxy server. You can also install the batch file as a windows service using any Java service wrapper
 tools. The server by default logs INFO messages to console and captures a detailed log in *ras.log* file. The default logging 
 preferences can be changed by updating the *conf/logging.properties* file.
@@ -85,7 +85,7 @@ The GET requests can be tested from a web browser. On linux you can also test au
 The server response is in json format, and returns the following on successful authentication
 > {"status":"SUCCESS","lookup":{"cn":"testuser","homeDirectory":"/home/testuser","loginShell":"/bin/bash"}}
 
-The auth server also supports base64 encoded username and password, which can easily be turned on/off by configuring the *ldap.base64* property
+The auth-proxy server also supports base64 encoded username and password, which can easily be turned on/off by configuring the *ldap.base64* property
 in the *conf/auth.conf* configuration file. If base64 encoding is enabled, the username and password must be encoded before passing to the server.
 
 License
