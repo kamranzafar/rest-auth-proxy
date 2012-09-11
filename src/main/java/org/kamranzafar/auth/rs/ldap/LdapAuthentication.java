@@ -60,8 +60,6 @@ public class LdapAuthentication {
 			searchFilter = "(objectclass=*)";
 		}
 
-		// String dn = "uid=" + user + "," + searchBase;
-
 		SearchControls searchCtls = new SearchControls();
 		searchCtls.setReturningAttributes(lookupAttributes);
 		searchCtls.setSearchScope(SearchControls.SUBTREE_SCOPE);

@@ -49,14 +49,10 @@ public class LdapAuthService implements AuthService {
 
 	private static Logger logger = Logger.getLogger(LdapAuthService.class.getName());
 
-	// @Context
-	// private HttpServletRequest request;
-
 	@GET
 	@Path("/ldap/{username}/{password}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public AuthResponse authenticateGet(@PathParam("username") String username, @PathParam("password") String password) {
-		logger.fine("New request recieved");
 		return authenticate(username, password);
 	}
 
@@ -64,12 +60,17 @@ public class LdapAuthService implements AuthService {
 	@Path("/ldap")
 	@Produces(MediaType.APPLICATION_JSON)
 	public AuthResponse authenticatePost(@FormParam("username") String username, @FormParam("password") String password) {
-		logger.fine("Request recieved");
 		return authenticate(username, password);
 	}
 
 	@Override
 	public AuthResponse authenticate(String username, String password) {
+		logger.fine("New request recieved");
+
+		if (StringUtils.isEmpty(username)) {
+			throw new AuthException("Username not supplied");
+		}
+
 		try {
 			if ("true".equalsIgnoreCase(config.getProperty("ldap.base64"))) {
 				username = new String(Base64.decode(username));
@@ -106,7 +107,7 @@ public class LdapAuthService implements AuthService {
 
 			return response;
 		} catch (Exception e) {
-			throw new AuthException(e.getMessage());
+			throw new AuthException(e.getMessage(), e);
 		}
 	}
 

@@ -2,7 +2,7 @@ Using rest-auth-proxy server
 ============================
 
 rest-auth-proxy is a Java based restful ldap-authentication http server that can be used to authenticate users against ldap and
-active directory. It serves as an authentication proxy server between the authenticating application and the ldap server. 
+active directory. It serves as an authentication proxy server between the calling application and the ldap server. 
 With the use of a restful architecture it can be used by any application developed in any technology for user authentication. 
 It is very easy to setup and simple to use and also supports *base64* username and password encoding.
 
@@ -47,7 +47,7 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
  \# base64 encoding<br />
  ldap.base64=true<br /><br />
  \# Active directory specific configuration<br />
- \# Active directory (optional, but must be set to true for AD)<br />
+ \# Optional, but must be set to true for AD<br />
  ldap.ad=false<br />
  \# AD domain (optional)<br />
  ldap.ad.domain=MYDOMAIN
@@ -79,11 +79,20 @@ The GET requests can be tested from a web browser. On linux you can also test au
 > curl http://\[server-ip\]:9998/auth/ldap/testuser/testpass<br />
 > curl -d "username=testuser&password=testpass" http://\[server-ip\]:9998/auth/ldap
 
-*The auth server has been tested against Active Directory and Open LDAP server*
+#### Performance
+The auth-proxy server can be easily be performance tested using any load testing tool, below is an example on linux using *httperf*.
+
+> httperf --server 127.0.1.1 --uri /auth/ldap/testuser/testpass --port 9998 --rate 10 --num-conns 500
+
+__The auth server has been tested against Active Directory and Open LDAP server__
 
 ### Server response
 The server response is in json format, and returns the following on successful authentication
 > {"status":"SUCCESS","lookup":{"cn":"testuser","homeDirectory":"/home/testuser","loginShell":"/bin/bash"}}
+
+In case of error, the server returns an error response with a HTTP status code of 400, 401 or 500, depending on the error, below is 
+an example of a HTTP 401 (Un-authorized) error:
+> {"status":"ERROR", "errorMessage":"[LDAP: error code 49 - Invalid Credentials]"}
 
 The auth-proxy server also supports base64 encoded username and password, which can easily be turned on/off by configuring the *ldap.base64* property
 in the *conf/auth.conf* configuration file. If base64 encoding is enabled, the username and password must be encoded before passing to the server.

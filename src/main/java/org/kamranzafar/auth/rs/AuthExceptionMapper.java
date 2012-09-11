@@ -18,7 +18,9 @@ package org.kamranzafar.auth.rs;
 
 import java.util.logging.Logger;
 
+import javax.naming.NamingSecurityException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
@@ -32,8 +34,18 @@ public class AuthExceptionMapper implements ExceptionMapper<AuthException> {
 
 	@Override
 	public Response toResponse(AuthException e) {
-		logger.fine("Un-Authorized " + e.getMessage());
-		return Response.status(Response.Status.UNAUTHORIZED)
+		logger.fine("Error authenticating user: " + e.getMessage());
+		return Response.status(getStatus(e.getCause()))
 				.entity("{\"status\":\"ERROR\", \"errorMessage\":\"" + e.getMessage() + "\"}").build();
+	}
+
+	private Status getStatus(Throwable e) {
+		if (e == null) {
+			return Status.BAD_REQUEST;
+		} else if (e instanceof NamingSecurityException) {
+			return Status.UNAUTHORIZED;
+		}
+
+		return Status.INTERNAL_SERVER_ERROR;
 	}
 }

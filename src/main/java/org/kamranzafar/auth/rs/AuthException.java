@@ -22,7 +22,6 @@ package org.kamranzafar.auth.rs;
  * 
  */
 public class AuthException extends RuntimeException {
-
 	public AuthException() {
 		super();
 	}
@@ -31,7 +30,7 @@ public class AuthException extends RuntimeException {
 		super(message);
 	}
 
-	public AuthException(Throwable cause) {
-		super(cause);
+	public AuthException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }
