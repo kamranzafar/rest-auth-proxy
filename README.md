@@ -80,7 +80,7 @@ The GET requests can be tested from a web browser. On linux you can also test au
 > curl -d "username=testuser&password=testpass" http://\[server-ip\]:9998/auth/ldap
 
 #### Performance
-The auth-proxy server can be easily be performance tested using any load testing tool, below is an example on linux using *httperf*.
+The auth-proxy server can easily be performance tested using any load testing tool, below is an example on linux using *httperf*.
 
 > httperf --server 127.0.1.1 --uri /auth/ldap/testuser/testpass --port 9998 --rate 10 --num-conns 500
 
