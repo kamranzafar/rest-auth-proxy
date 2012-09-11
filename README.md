@@ -24,7 +24,7 @@ Installation
 
 rest-auth-proxy server requires Java 6. Follow the below steps to install the server
 
-1. Make sure JAVA_HOME environment variable is set and pointing to the bin directory of JDK/JRE
+1. Make sure JAVA_HOME environment variable is set and pointing to the home directory of JDK/JRE
 2. Extract the contents of the dist-zip file to any location.
 3. Edit the *conf/auth.conf* file and set ldap server preferences. 
 
