@@ -37,12 +37,16 @@ Configuration
 
 Below is an example configuration, this needs to be in the *conf/auth.conf* file:
 <pre><code>
+ ################## Server config
+
  # Server port
  server.port=9998
+
  # Server bind address
  server.bind=localhost
 
- # Ldap config
+ ################## Ldap config
+ 
  ldap.host=localhost
  ldap.port=389 # optional
 
@@ -58,7 +62,7 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
  # base64 encoding
  ldap.base64=true
 
- # Active directory specific configuration
+ ################## Active directory specific config
 
  # Optional, but must be set to true for AD
  ldap.ad=false
