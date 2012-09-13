@@ -33,7 +33,6 @@
 		<url>git@github.com:kamranzafar/rest-auth-proxy.git</url>
 	</scm>
 	<build>
-		<finalName>rest-auth-proxy</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

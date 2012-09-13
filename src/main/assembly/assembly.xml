@@ -15,7 +15,7 @@
       <outputDirectory>/</outputDirectory>
     </file>
      <file>
-      <source>target/rest-auth-proxy.jar</source>
+      <source>target/${artifactId}-${version}.${packaging}</source>
       <outputDirectory>/</outputDirectory>
     </file>
     <file>
