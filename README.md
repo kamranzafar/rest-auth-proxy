@@ -32,25 +32,36 @@ Configuration
 -------------
 
 Below is an example configuration, this needs to be in the *conf/auth.conf* file:
+<pre><code>
+ # Server port
+ server.port=9998
+ # Server bind address
+ server.bind=localhost
 
-> \# Server port<br />
- server.port=9998<br /><br />
- \# Ldap config<br />
- ldap.host=localhost<br />
- ldap.port=389 \# optional<br /><br />
- \# ldap search base<br />
- ldap.sbase=ou=People,dc=ldap,dc=local<br /><br />
- \# ldap search filter (optional)<br />
- ldap.sfilter=(objectclass=*)<br /><br />
- \# ldap comma-separated lookup attributes<br />
- ldap.lookup=cn,homeDirectory,loginShell<br /><br />
- \# base64 encoding<br />
- ldap.base64=true<br /><br />
- \# Active directory specific configuration<br />
- \# Optional, but must be set to true for AD<br />
- ldap.ad=false<br />
- \# AD domain (optional)<br />
+ # Ldap config
+ ldap.host=localhost
+ ldap.port=389 # optional
+
+ # ldap search base
+ ldap.sbase=ou=People,dc=ldap,dc=local
+
+ # ldap search filter (optional)
+ ldap.sfilter=(objectclass=*)
+
+ # ldap comma-separated lookup attributes
+ ldap.lookup=cn,homeDirectory,loginShell
+
+ # base64 encoding
+ ldap.base64=true
+
+ # Active directory specific configuration
+
+ # Optional, but must be set to true for AD
+ ldap.ad=false
+
+ # AD domain (optional)
  ldap.ad.domain=MYDOMAIN
+</code></pre>
 
 Running the server
 ------------------
