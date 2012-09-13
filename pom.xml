@@ -5,7 +5,34 @@
 	<artifactId>rest-auth-proxy</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
+	<developers>
+		<developer>
+			<id>xeus.man</id>
+			<name>Kamran Zafar</name>
+			<email>xeus.man@gmail.com
+            </email>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>Apache Software License</name>
+			<url>${basedir}/LICENSE.txt
+            </url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<organization>
+		<name>Kamran Zafar</name>
+		<url>http://kamranzafar.org</url>
+	</organization>
+	<scm>
+		<connection>scm:git:git@github.com:kamranzafar/rest-auth-proxy.git</connection>
+		<developerConnection>scm:git:git@github.com:kamranzafar/rest-auth-proxy.git</developerConnection>
+		<url>git@github.com:kamranzafar/rest-auth-proxy.git</url>
+	</scm>
 	<build>
 		<finalName>rest-auth-proxy</finalName>
 		<plugins>
