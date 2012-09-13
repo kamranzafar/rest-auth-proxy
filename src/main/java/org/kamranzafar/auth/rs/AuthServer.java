@@ -87,8 +87,8 @@ public class AuthServer {
 			public void run() {
 				httpServer.stop();
 
-				if (mainThread != null) {
-					mainThread.interrupt();
+				if (AuthServer.mainThread != null) {
+					AuthServer.mainThread.interrupt();
 				}
 			}
 		});
