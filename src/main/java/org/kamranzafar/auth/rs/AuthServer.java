@@ -74,10 +74,27 @@ public class AuthServer {
 		return GrizzlyServerFactory.createHttpServer(BASE_URI, rc);
 	}
 
+	private static Thread mainThread;
+
 	public static void main(String[] args) throws IOException {
-		HttpServer httpServer = startServer();
-		logger.info("rest-auth-proxy server has started");
-		System.in.read();
-		httpServer.stop();
+		mainThread = Thread.currentThread();
+
+		final HttpServer httpServer = startServer();
+		logger.info("rest-auth-proxy server has started, press ctrl-c to shutdown.");
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				httpServer.stop();
+
+				if (mainThread != null) {
+					mainThread.interrupt();
+				}
+			}
+		});
+
+		while (true) {
+			System.in.read();
+		}
 	}
 }
