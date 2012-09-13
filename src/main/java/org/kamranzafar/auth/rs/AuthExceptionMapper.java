@@ -35,8 +35,10 @@ public class AuthExceptionMapper implements ExceptionMapper<AuthException> {
 	@Override
 	public Response toResponse(AuthException e) {
 		logger.fine("Error authenticating user: " + e.getMessage());
-		return Response.status(getStatus(e.getCause()))
-				.entity("{\"status\":\"ERROR\", \"errorMessage\":\"" + e.getMessage() + "\"}").build();
+		return Response
+				.status(getStatus(e.getCause()))
+				.entity("{\"status\":\"ERROR\", \"errorMessage\":\"" + e.getMessage().replaceAll("\\p{Cntrl}", "")
+						+ "\"}").build();
 	}
 
 	private Status getStatus(Throwable e) {
