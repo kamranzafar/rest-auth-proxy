@@ -12,13 +12,11 @@ Building from source
 Follow the steps below in order to build rest-auth-proxy from source. This requires git and maven:
 
 1. Checkout the source from git
-<pre><code>
- git clone git&#64;github.com:kamranzafar/rest-auth-proxy.git
+<pre><code> git clone git&#64;github.com:kamranzafar/rest-auth-proxy.git
 </code></pre>
 
 2. Compile and package using maven
-<pre><code>
- mvn clean compile package
+<pre><code> mvn clean compile package
 </code></pre>
 
 This will compile the source and create a *rest-auth-proxy-dist.zip* file in the target directory, which can be used for installation.
@@ -86,41 +84,35 @@ In order to authenticate the user, the application can pass username and passwor
 
 ### Passing username and password as a GET request
 Below is how to make GET request
-<pre><code>
- http://[server-ip]:9998/auth/ldap/username/password
+<pre><code> http://[server-ip]:9998/auth/ldap/username/password
 </code></pre>
 
 ### Passing username and password as a POST request
 The username and password can be passed as a POST request to the following URL.
-<pre><code>
- http://[server-ip]:9998/auth/ldap
+<pre><code> http://[server-ip]:9998/auth/ldap
 </code></pre>
 
 ### Testing
 The GET requests can be tested from a web browser. On linux you can also test authentication using curl like:
-<pre><code>
- curl http://[server-ip]:9998/auth/ldap/testuser/testpass
+<pre><code> curl http://[server-ip]:9998/auth/ldap/testuser/testpass
  curl -d "username=testuser&password=testpass" http://[server-ip]:9998/auth/ldap
 </code></pre>
 
 #### Performance
 The auth-proxy server can easily be performance tested using any load testing tool, below is an example on linux using *httperf*.
-<pre><code>
- httperf --server 127.0.1.1 --uri /auth/ldap/testuser/testpass --port 9998 --rate 10 --num-conns 500
+<pre><code> httperf --server 127.0.1.1 --uri /auth/ldap/testuser/testpass --port 9998 --rate 10 --num-conns 500
 </code></pre>
 
-__The auth server has been tested against Active Directory and Open LDAP server__
+> __The auth server has been tested against Active Directory and Open LDAP server__
 
 ### Server response
 The server response is in json format, and returns the following on successful authentication
-<pre><code>
- {"status":"SUCCESS","lookup":{"cn":"testuser","homeDirectory":"/home/testuser","loginShell":"/bin/bash"}}
+<pre><code> {"status":"SUCCESS","lookup":{"cn":"testuser","homeDirectory":"/home/testuser","loginShell":"/bin/bash"}}
 </code></pre>
 
 In case of error, the server returns an error response with a HTTP status code of 400, 401 or 500, depending on the error, below is 
 an example of a HTTP 401 (Un-authorized) error:
-<pre><code>
- {"status":"ERROR", "errorMessage":"[LDAP: error code 49 - Invalid Credentials]"}
+<pre><code> {"status":"ERROR", "errorMessage":"[LDAP: error code 49 - Invalid Credentials]"}
 </code></pre>
 
 The auth-proxy server also supports base64 encoded username and password, which can easily be turned on/off by configuring the *ldap.base64* property
