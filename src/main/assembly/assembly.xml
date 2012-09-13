@@ -15,16 +15,18 @@
       <outputDirectory>/</outputDirectory>
     </file>
      <file>
-      <source>target/${artifactId}-${version}.${packaging}</source>
+      <source>target/${project.artifactId}-${project.version}.${project.packaging}</source>
       <outputDirectory>/</outputDirectory>
     </file>
     <file>
       <source>${basedir}/src/main/scripts/run.sh</source>
       <outputDirectory>/</outputDirectory>
+      <filtered>true</filtered>
     </file>
     <file>
       <source>${basedir}/src/main/scripts/run.bat</source>
       <outputDirectory>/</outputDirectory>
+      <filtered>true</filtered>
     </file>
     <file>
       <source>${basedir}/src/main/conf/auth.conf</source>
