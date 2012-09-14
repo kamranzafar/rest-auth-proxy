@@ -35,9 +35,47 @@ import com.sun.jersey.api.json.JSONConfiguration;
  * @author Kamran Zafar
  * 
  */
-public class AuthServer {
+public class AuthServer implements Runnable {
 	private static final URI BASE_URI = getBaseURI();
 	private static Logger logger = Logger.getLogger(AuthServer.class.getName());
+
+	private HttpServer server = null;
+	private final Object lock = new Object();
+
+	protected HttpServer startServer() throws IOException {
+		logger.info("Starting rest-auth-proxy server...");
+		ResourceConfig rc = new PackagesResourceConfig("org.kamranzafar.auth.rs", "org.kamranzafar.auth.rs.ldap");
+		rc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+
+		return GrizzlyServerFactory.createHttpServer(BASE_URI, rc);
+	}
+
+	protected void stopServer() {
+		if (server != null) {
+			logger.info("Shutting down rest-auth-proxy server...");
+			server.stop();
+		}
+	}
+
+	@Override
+	public void run() {
+		try {
+			server = startServer();
+			logger.info("rest-auth-proxy server started, press ctrl-c to shutdown");
+
+			while (server.isStarted()) {
+				synchronized (lock) {
+					try {
+						lock.wait(10000);
+					} catch (InterruptedException e) {
+						break;
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private static int getPort(int defaultPort) {
 		String port = System.getProperty("auth.server.port");
@@ -66,35 +104,20 @@ public class AuthServer {
 		return UriBuilder.fromUri("http://" + addr + "/").port(getPort(9998)).build();
 	}
 
-	protected static HttpServer startServer() throws IOException {
-		logger.info("Starting rest-auth-proxy server...");
-		ResourceConfig rc = new PackagesResourceConfig("org.kamranzafar.auth.rs", "org.kamranzafar.auth.rs.ldap");
-		rc.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
-
-		return GrizzlyServerFactory.createHttpServer(BASE_URI, rc);
-	}
-
-	private static Thread mainThread;
-
-	public static void main(String[] args) throws IOException {
-		mainThread = Thread.currentThread();
-
-		final HttpServer httpServer = startServer();
-		logger.info("rest-auth-proxy server has started, press ctrl-c to shutdown.");
+	public static void main(String[] args) throws IOException, InterruptedException {
+		final AuthServer authServer = new AuthServer();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				httpServer.stop();
-
-				if (AuthServer.mainThread != null) {
-					AuthServer.mainThread.interrupt();
-				}
+				authServer.stopServer();
+				System.out.println("Shutdown complete.");
+				System.out.flush();
 			}
 		});
 
-		while (true) {
-			System.in.read();
-		}
+		Thread authServerThread = new Thread(authServer);
+		authServerThread.start();
+		authServerThread.join();
 	}
 }
