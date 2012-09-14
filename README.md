@@ -103,7 +103,7 @@ The auth-proxy server can easily be performance tested using any load testing to
 <pre><code> httperf --server 127.0.1.1 --uri /auth/ldap/testuser/testpass --port 9998 --rate 10 --num-conns 500
 </code></pre>
 
-> __The auth server has been tested against Active Directory and Open LDAP server__
+__The auth server has been tested against Active Directory and Open LDAP server__
 
 ### Server response
 The server response is in json format, and returns the following on successful authentication
