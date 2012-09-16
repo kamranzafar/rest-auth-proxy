@@ -21,5 +21,5 @@ package org.kamranzafar.auth.rs;
  * 
  */
 public interface AuthService {
-	public AuthResponse authenticate(String username, String password);
+	public AuthResponse authenticate(String server, String username, String password);
 }

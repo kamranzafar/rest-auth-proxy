@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.UriBuilder;
@@ -35,9 +36,14 @@ import com.sun.jersey.api.json.JSONConfiguration;
  * @author Kamran Zafar
  * 
  */
-public class AuthServer implements Runnable {
+public class AuthProxyServer implements Runnable {
+	private static final String LOCALHOST = "127.0.0.1";
+	private static final String SERVER_BIND = "server.bind";
+	private static final String SERVER_PORT = "server.port";
+
+	private static Properties config = Configuration.getServerConfig();
 	private static final URI BASE_URI = getBaseURI();
-	private static Logger logger = Logger.getLogger(AuthServer.class.getName());
+	private static Logger logger = Logger.getLogger(AuthProxyServer.class.getName());
 
 	private HttpServer server = null;
 	private final Object lock = new Object();
@@ -81,15 +87,15 @@ public class AuthServer implements Runnable {
 		String port = System.getProperty("auth.server.port");
 
 		if (port == null) {
-			port = Configuration.getConfig().getProperty("server.port", "" + defaultPort);
+			port = config.getProperty(SERVER_PORT, "" + defaultPort);
 		}
 
 		return StringUtils.toInt(port, defaultPort);
 	}
 
 	private static URI getBaseURI() {
-		String addr = "127.0.0.1";
-		String bindAddress = Configuration.getConfig().getProperty("server.bind");
+		String addr = LOCALHOST;
+		String bindAddress = config.getProperty(SERVER_BIND);
 
 		if (bindAddress == null) {
 			try {
@@ -105,7 +111,7 @@ public class AuthServer implements Runnable {
 	}
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		final AuthServer authServer = new AuthServer();
+		final AuthProxyServer authServer = new AuthProxyServer();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override

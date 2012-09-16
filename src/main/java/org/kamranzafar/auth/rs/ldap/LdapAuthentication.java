@@ -46,7 +46,6 @@ public class LdapAuthentication {
 
 	public LdapAuthentication(String host) {
 		this.ldapHost = host;
-		lookupAttributes = new String[] { "sn", "givenName", "mail" };
 		this.ldapPort = 389;
 	}
 
