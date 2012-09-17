@@ -2,7 +2,7 @@ Using rest-auth-proxy server
 ============================
 
 rest-auth-proxy is a Java based restful ldap-authentication http server that can be used to authenticate users against ldap and
-active directory. It serves as an authentication proxy server between the calling application and the ldap server. 
+active directory. It serves as an authentication proxy server between the calling application and the ldap servers. 
 With the use of a restful architecture it can be used by any application developed in any technology for user authentication. 
 It is very easy to setup and simple to use and also supports *base64* username and password encoding.
 
@@ -34,8 +34,7 @@ Configuration
 -------------
 
 Below is an example configuration, this needs to be in the *conf/auth.conf* file:
-<pre><code>
- ################## Server config
+<pre><code> ################## Server config
 
  # Server port
  server.port=9998
@@ -46,7 +45,7 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
  ################## Ldap config
  
  ldap.host=localhost
- ldap.port=389 # optional
+ ldap.port=389 # optional, default is 389
 
  # ldap search base
  ldap.sbase=ou=People,dc=ldap,dc=local
@@ -69,6 +68,25 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
  ldap.ad.domain=MYDOMAIN
 </code></pre>
 
+It is also possible to confugure multiple ldap servers, below is an example.
+<pre><code> # Specify ldap server config names
+auth.servers=ldap1,ldap2
+
+# configuration for ldap1 auth server
+ldap1.ldap.host=ldapserver1.hostname
+ldap1.ldap.sbase=ou=People,dc=ldap,dc=local
+ldap1.ldap.lookup=cn,homeDirectory,loginShell
+ldap1.ldap.base64=false
+
+# configuration for ldap2 auth server
+ldap2.ldap.host=ldapserver1.hostname
+ldap2.ldap.sbase=ou=People,dc=ldap,dc=local
+ldap2.ldap.lookup=cn,homeDirectory,loginShell
+ldap2.ldap.base64=true
+</code></pre>
+
+*Note: Multiple server configuration is available from version 0.2*
+
 Running the server
 ------------------
 
@@ -87,15 +105,21 @@ Below is how to make GET request
 <pre><code> http://[server-ip]:9998/auth/ldap/username/password
 </code></pre>
 
+Below is an example to authenticate against a named ldap server *(see multiple server config in the previous section)*
+<pre><code> http://[server-ip]:9998/auth/ldap/ldap1/username/password
+</code></pre>
+
 ### Passing username and password as a POST request
 The username and password can be passed as a POST request to the following URL.
 <pre><code> http://[server-ip]:9998/auth/ldap
 </code></pre>
 
+It is also possible to specify a named ldap server, by passing the *server* parameter in the request.
+
 ### Testing
 The GET requests can be tested from a web browser. On linux you can also test authentication using curl like:
 <pre><code> curl http://[server-ip]:9998/auth/ldap/testuser/testpass
- curl -d "username=testuser&password=testpass" http://[server-ip]:9998/auth/ldap
+ curl -d "server=ldap1&username=testuser&password=testpass" http://[server-ip]:9998/auth/ldap
 </code></pre>
 
 #### Performance

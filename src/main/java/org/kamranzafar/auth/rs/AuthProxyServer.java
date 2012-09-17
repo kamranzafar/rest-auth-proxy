@@ -112,17 +112,19 @@ public class AuthProxyServer implements Runnable {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		final AuthProxyServer authServer = new AuthProxyServer();
+		final Thread authServerThread = new Thread(authServer);
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
 				authServer.stopServer();
+				authServerThread.interrupt();
+
 				System.out.println("Shutdown complete.");
 				System.out.flush();
 			}
 		});
 
-		Thread authServerThread = new Thread(authServer);
 		authServerThread.start();
 		authServerThread.join();
 	}
