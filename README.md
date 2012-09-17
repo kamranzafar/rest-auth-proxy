@@ -68,7 +68,7 @@ Below is an example configuration, this needs to be in the *conf/auth.conf* file
  ldap.ad.domain=MYDOMAIN
 </code></pre>
 
-It is also possible to confugure multiple ldap servers, below is an example.
+It is also possible to configure multiple ldap servers, below is an example.
 <pre><code> # Specify ldap server config names
 auth.servers=ldap1,ldap2
 
@@ -79,7 +79,7 @@ ldap1.ldap.lookup=cn,homeDirectory,loginShell
 ldap1.ldap.base64=false
 
 # configuration for ldap2 auth server
-ldap2.ldap.host=ldapserver1.hostname
+ldap2.ldap.host=ldapserver2.hostname
 ldap2.ldap.sbase=ou=People,dc=ldap,dc=local
 ldap2.ldap.lookup=cn,homeDirectory,loginShell
 ldap2.ldap.base64=true
