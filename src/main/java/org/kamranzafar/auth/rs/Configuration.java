@@ -47,6 +47,8 @@ public class Configuration {
 				String[] lha = ldapHosts.split("[\\|\\,;]");
 
 				for (String lh : lha) {
+					lh = lh.trim();
+
 					if (!StringUtils.isBlank(lh)) {
 						Map<String, String> map = new HashMap<String, String>();
 
