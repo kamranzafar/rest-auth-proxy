@@ -44,16 +44,18 @@ public class Configuration {
 			String ldapHosts = serverConfig.getProperty("auth.servers");
 
 			if (ldapHosts != null) {
-				String[] lha = ldapHosts.split("\\.\\|,;");
+				String[] lha = ldapHosts.split("[\\|\\,;]");
 
 				for (String lh : lha) {
-					Map<String, String> map = new HashMap<String, String>();
+					if (!StringUtils.isBlank(lh)) {
+						Map<String, String> map = new HashMap<String, String>();
 
-					for (Keys k : Keys.values()) {
-						map.put(k.key(), serverConfig.getProperty(lh + "." + k.key()));
+						for (Keys k : Keys.values()) {
+							map.put(k.key(), serverConfig.getProperty(lh + "." + k.key()));
+						}
+
+						authServerConfig.put(lh, map);
 					}
-
-					authServerConfig.put(lh, map);
 				}
 			}
 
