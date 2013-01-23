@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="rest-auth-proxy : Java based restful ldap-authentication proxy server" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>rest-auth-proxy</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/kamranzafar/rest-auth-proxy">View on GitHub</a>
+
+          <h1 id="project_title">rest-auth-proxy</h1>
+          <h2 id="project_tagline">Java based restful ldap-authentication proxy server</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/kamranzafar/rest-auth-proxy/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/kamranzafar/rest-auth-proxy/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>Using rest-auth-proxy server</h1>
+
+<p>rest-auth-proxy is a Java based restful ldap-authentication http server that can be used to authenticate users against ldap and
+active directory. It serves as an authentication proxy server between the calling application and the ldap servers. 
+With the use of a restful architecture it can be used by any application developed in any technology for user authentication. 
+It is very easy to setup and simple to use and also supports <em>base64</em> username and password encoding.</p>
+
+<h2>Building from source</h2>
+
+<p>Follow the steps below in order to build rest-auth-proxy from source. This requires git and maven:</p>
+
+<ol>
+<li>
+<p>Checkout the source from git</p>
+
+<pre><code> git clone git@github.com:kamranzafar/rest-auth-proxy.git
+</code></pre>
+</li>
+<li>
+<p>Compile and package using maven</p>
+
+<pre><code> mvn clean compile package
+</code></pre>
+</li>
+</ol><p>This will compile the source and create a <em>rest-auth-proxy-dist.zip</em> file in the target directory, which can be used for installation.</p>
+
+<h2>Installation</h2>
+
+<p>rest-auth-proxy server requires Java 6. Follow the below steps to install the server</p>
+
+<ol>
+<li>Make sure JAVA_HOME environment variable is set and pointing to the home directory of JDK/JRE</li>
+<li>Extract the contents of the dist-zip file to any location.</li>
+<li>Edit the <em>conf/auth.conf</em> file and set ldap server preferences. </li>
+</ol><h2>Configuration</h2>
+
+<p>Below is an example configuration, this needs to be in the <em>conf/auth.conf</em> file:</p>
+
+<pre><code> ################## Server config
+
+ # Server port
+ server.port=9998
+
+ # Server bind address
+ server.bind=localhost
+
+ ################## Ldap config
+ 
+ ldap.host=localhost
+ ldap.port=389 # optional, default is 389
+
+ # ldap search base
+ ldap.sbase=ou=People,dc=ldap,dc=local
+
+ # ldap search filter (optional)
+ ldap.sfilter=(objectclass=*)
+
+ # ldap comma-separated lookup attributes
+ ldap.lookup=cn,homeDirectory,loginShell
+
+ # base64 encoding
+ ldap.base64=true
+
+ ################## Active directory specific config
+
+ # Optional, but must be set to true for AD
+ ldap.ad=false
+
+ # AD domain (optional)
+ ldap.ad.domain=MYDOMAIN
+</code></pre>
+
+<p>It is also possible to configure multiple ldap servers, below is an example.</p>
+
+<pre><code> # Specify ldap server config names
+auth.servers=ldap1,ldap2
+
+# configuration for ldap1 auth server
+ldap1.ldap.host=ldapserver1.hostname
+ldap1.ldap.sbase=ou=People,dc=ldap,dc=local
+ldap1.ldap.lookup=cn,homeDirectory,loginShell
+ldap1.ldap.base64=false
+
+# configuration for ldap2 auth server
+ldap2.ldap.host=ldapserver2.hostname
+ldap2.ldap.sbase=ou=People,dc=ldap,dc=local
+ldap2.ldap.lookup=cn,homeDirectory,loginShell
+ldap2.ldap.base64=true
+</code></pre>
+
+<p><em>Note: Multiple server configuration is available from version 0.2</em></p>
+
+<h2>Running the server</h2>
+
+<p>The auth-proxy server can run on both windows and linux. Simply execute the <em>run.bat</em> file on windows or <em>run.sh</em> file on linux
+in order to run the auth proxy server. You can also install the batch file as a windows service using any Java service wrapper
+tools. The server by default logs INFO messages to console and captures a detailed log in <em>ras.log</em> file. The default logging 
+preferences can be changed by updating the <em>conf/logging.properties</em> file.</p>
+
+<h2>Authentication</h2>
+
+<p>In order to authenticate the user, the application can pass username and password as a HTTP GET or POST request like below:</p>
+
+<h3>Passing username and password as a GET request</h3>
+
+<p>Below is how to make GET request</p>
+
+<pre><code> http://[server-ip]:9998/auth/ldap/username/password
+</code></pre>
+
+<p>Below is an example to authenticate against a named ldap server <em>(see multiple server config in the previous section)</em></p>
+
+<pre><code> http://[server-ip]:9998/auth/ldap/ldap1/username/password
+</code></pre>
+
+<h3>Passing username and password as a POST request</h3>
+
+<p>The username and password can be passed as a POST request to the following URL.</p>
+
+<pre><code> http://[server-ip]:9998/auth/ldap
+</code></pre>
+
+<p>It is also possible to specify a named ldap server, by passing the <em>server</em> parameter in the request.</p>
+
+<h3>Testing</h3>
+
+<p>The GET requests can be tested from a web browser. On linux you can also test authentication using curl like:</p>
+
+<pre><code> curl http://[server-ip]:9998/auth/ldap/testuser/testpass
+ curl -d "server=ldap1&amp;username=testuser&amp;password=testpass" http://[server-ip]:9998/auth/ldap
+</code></pre>
+
+<h4>Performance</h4>
+
+<p>The auth-proxy server can easily be performance tested using any load testing tool, below is an example on linux using <em>httperf</em>.</p>
+
+<pre><code> httperf --server 127.0.1.1 --uri /auth/ldap/testuser/testpass --port 9998 --rate 10 --num-conns 500
+</code></pre>
+
+<p><strong>The auth server has been tested against Active Directory and Open LDAP server</strong></p>
+
+<h3>Server response</h3>
+
+<p>The server response is in json format, and returns the following on successful authentication</p>
+
+<pre><code> {"status":"SUCCESS","lookup":{"cn":"testuser","homeDirectory":"/home/testuser","loginShell":"/bin/bash"}}
+</code></pre>
+
+<p>In case of error, the server returns an error response with a HTTP status code of 400, 401 or 500, depending on the error, below is 
+an example of a HTTP 401 (Un-authorized) error:</p>
+
+<pre><code> {"status":"ERROR", "errorMessage":"[LDAP: error code 49 - Invalid Credentials]"}
+</code></pre>
+
+<p>The auth-proxy server also supports base64 encoded username and password, which can easily be turned on/off by configuring the <em>ldap.base64</em> property
+in the <em>conf/auth.conf</em> configuration file. If base64 encoding is enabled, the username and password must be encoded before passing to the server.</p>
+
+<h2>License</h2>
+
+<p>The rest-auth-proxy server is open source and is free to use for both personal and commercial purposes under the terms and
+conditions of <a href="http://www.apache.org/licenses/LICENSE-2.0.html" title="ASL 2.0">Apache Software License</a>.</p>
+
+<p><strong>Note: This document is in <a href="http://daringfireball.net/projects/markdown" title="Markdown">markdown</a> format</strong></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">rest-auth-proxy maintained by <a href="https://github.com/kamranzafar">kamranzafar</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
