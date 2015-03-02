@@ -1,9 +1,9 @@
 Using rest-auth-proxy server
 ============================
 
-rest-auth-proxy is a Java based restful ldap-authentication http server that can be used to authenticate users against ldap and
-active directory. It serves as an authentication proxy server between the calling application and the ldap servers. 
-With the use of a restful architecture it can be used by any application developed in any technology for user authentication. 
+rest-auth-proxy is a Java based restful ldap-authentication microservice that can be used to authenticate users against ldap and
+active directory. It serves as an authentication proxy between the calling application and the ldap servers. 
+With the use of a restful architecture & microservice pattern it can be used by any application developed in any technology for user authentication. 
 It is very easy to setup and simple to use and also supports *base64* username and password encoding.
 
 Building from source
@@ -24,7 +24,7 @@ This will compile the source and create a *rest-auth-proxy-dist.zip* file in the
 Installation
 ------------
 
-rest-auth-proxy server requires Java 6. Follow the below steps to install the server
+rest-auth-proxy microservice requires Java 6. Follow the below steps to install the server
 
 1. Make sure JAVA_HOME environment variable is set and pointing to the home directory of JDK/JRE
 2. Extract the contents of the dist-zip file to any location.
@@ -90,9 +90,9 @@ ldap2.ldap.base64=true
 Running the server
 ------------------
 
-The auth-proxy server can run on both windows and linux. Simply execute the *run.bat* file on windows or *run.sh* file on linux
-in order to run the auth proxy server. You can also install the batch file as a windows service using any Java service wrapper
-tools. The server by default logs INFO messages to console and captures a detailed log in *ras.log* file. The default logging 
+The auth-proxy microservice can run on both windows and linux. Simply execute the *run.bat* file on windows or *run.sh* file on linux
+in order to run the auth proxy microservice. You can also install the batch file as a windows service using any Java service wrapper
+tools. The service by default logs INFO messages to console and captures a detailed log in *ras.log* file. The default logging 
 preferences can be changed by updating the *conf/logging.properties* file.
 
 Authentication
@@ -123,29 +123,27 @@ The GET requests can be tested from a web browser. On linux you can also test au
 </code></pre>
 
 #### Performance
-The auth-proxy server can easily be performance tested using any load testing tool, below is an example on linux using *httperf*.
+The auth-proxy microservice can easily be performance tested using any load testing tool, below is an example on linux using *httperf*.
 <pre><code> httperf --server 127.0.1.1 --uri /auth/ldap/testuser/testpass --port 9998 --rate 10 --num-conns 500
 </code></pre>
 
-__The auth server has been tested against Active Directory and Open LDAP server__
+__The auth service has been tested against Active Directory and Open LDAP server__
 
-### Server response
-The server response is in json format, and returns the following on successful authentication
+### Service response
+The microservice response is in json format, and returns the following on successful authentication
 <pre><code> {"status":"SUCCESS","lookup":{"cn":"testuser","homeDirectory":"/home/testuser","loginShell":"/bin/bash"}}
 </code></pre>
 
-In case of error, the server returns an error response with a HTTP status code of 400, 401 or 500, depending on the error, below is 
+In case of error, the service returns an error response with a HTTP status code of 400, 401 or 500, depending on the error, below is 
 an example of a HTTP 401 (Un-authorized) error:
 <pre><code> {"status":"ERROR", "errorMessage":"[LDAP: error code 49 - Invalid Credentials]"}
 </code></pre>
 
-The auth-proxy server also supports base64 encoded username and password, which can easily be turned on/off by configuring the *ldap.base64* property
+The auth-proxy service also supports base64 encoded username and password, which can easily be turned on/off by configuring the *ldap.base64* property
 in the *conf/auth.conf* configuration file. If base64 encoding is enabled, the username and password must be encoded before passing to the server.
 
 License
 -------
 
-The rest-auth-proxy server is open source and is free to use for both personal and commercial purposes under the terms and
+The rest-auth-proxy microservice is open source and is free to use for both personal and commercial purposes under the terms and
 conditions of [Apache Software License](http://www.apache.org/licenses/LICENSE-2.0.html "ASL 2.0").
-
-__Note: This document is in [markdown](http://daringfireball.net/projects/markdown "Markdown") format__
