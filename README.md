@@ -1,5 +1,5 @@
-Using rest-auth-proxy server
-============================
+Using rest-auth-proxy microservice
+==================================
 
 rest-auth-proxy is a Java based restful ldap-authentication microservice that can be used to authenticate users against ldap and
 active directory. It serves as an authentication proxy between the calling application and the ldap servers. 
