@@ -131,7 +131,7 @@ __The auth service has been tested against Active Directory and Open LDAP server
 
 ### Service response
 The microservice response is in json format, and returns the following on successful authentication
-<pre><code> {"status":"SUCCESS","lookup":{"cn":"testuser","homeDirectory":"/home/testuser","loginShell":"/bin/bash"}}
+<pre><code> {"status":"SUCCESS","lookup":{"cn":\["testuser"\],"homeDirectory":\["/home/testuser"\],"loginShell":\["/bin/bash"\]}}
 </code></pre>
 
 In case of error, the service returns an error response with a HTTP status code of 400, 401 or 500, depending on the error, below is 
